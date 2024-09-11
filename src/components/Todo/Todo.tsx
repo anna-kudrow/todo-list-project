@@ -9,9 +9,9 @@ function Todo() {
 
     const [inputValue, setInputValue] = useState('');
 
-    const [id, setId] = useState(0);
+    const [id, setId] = useState(1);
 
-    const [isDone, setIsDone] = useState(false);
+    // const [isDone, setIsDone] = useState(false); 
 
 
     function createId () {
@@ -25,7 +25,7 @@ function Todo() {
     function addTodo (): void {
         if (inputValue && inputValue.trim() !== '') {
             createId();
-            const newItem:TodoItemType = {id: id, text: inputValue, done: isDone}
+            const newItem:TodoItemType = {id: id, text: inputValue, done: false}
             const newList = [...todoList, newItem];
             setTodoList(newList);
             setInputValue('');
@@ -35,6 +35,15 @@ function Todo() {
     function handleDelete(item: string):void {
         setTodoList(todoList.filter(task => task.text !== item))
     }
+
+    function handleUpdateStatus(id: number):void {
+        const newList = todoList.map(item => {if (item.id === id) item.done = !item.done;
+            return item;
+        })
+        setTodoList(newList);
+        
+    }
+        
 
     // function handleEdit () {
     //     console.log('btn edit');
@@ -49,7 +58,7 @@ function Todo() {
                     <Button onClick={addTodo}>ADD</Button>
                 </div>
                 <ul className="todo-list">
-                    {todoList.map((item) => <TodoItem id={item.id} text={item.text} isDone={item.done} key={item.id}  onDelete={handleDelete} onStatusChange={setIsDone} />)}
+                    {todoList.map((item) => <TodoItem id={item.id} text={item.text} isDone={item.done} key={item.id}  onDelete={handleDelete} onStatusChange={handleUpdateStatus} />)}
                 </ul>
             </div>
         </>

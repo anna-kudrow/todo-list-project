@@ -7,23 +7,16 @@ interface TodoItemProps {
     text: string;
     isDone: boolean;
     onDelete: (item: string) => void;
-    onStatusChange: React.Dispatch<React.SetStateAction<boolean>>;
+    onStatusChange: (id: number) => void;
 }
 
-function TodoItem({ text, isDone, onDelete, onStatusChange}: TodoItemProps) {  
-
-
-
-    function changeTaskStatus () {
-       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-       isDone ? onStatusChange(true) : onStatusChange(false);
-       console.log(isDone);
-    }
+function TodoItem({ text, isDone, onDelete, id, onStatusChange}: TodoItemProps) {  
+ 
 
     return ( 
         <li className="todo-item"> 
             <div>
-                <input type="checkbox" onChange={changeTaskStatus} />
+                <input type="checkbox" onChange={()=>onStatusChange(id)} />
                 <span className={isDone ? 'task-text done' : 'task-text'}>{text}</span>
             </div>
             <div className="todo-tools">

@@ -36,7 +36,7 @@ function Todo() {
             const newList = [...todoList, newItem];
             setTodoList(newList);
             setInputValue('');
-            inputRef.current.focus();
+            if (inputRef.current) inputRef.current.focus();
         }
     }
 
@@ -52,7 +52,7 @@ function Todo() {
 
     function handleDelete(id: number): void {
         setTodoList(todoList.filter(task => task.id !== id));
-        inputRef.current.focus();
+        if (inputRef.current) inputRef.current.focus();
     }
 
     function handleUpdateStatus(id: number): void {
@@ -69,13 +69,13 @@ function Todo() {
         });
         setEditMode(true);
         setEditItemIndex(id);
-        inputRef.current.focus();
+        if (inputRef.current) inputRef.current.focus();
     }
 
-    const inputRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        inputRef.current.focus();
+        if (inputRef.current) inputRef.current.focus();
     }, []);
 
     return (

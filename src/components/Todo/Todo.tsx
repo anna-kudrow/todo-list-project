@@ -3,6 +3,8 @@ import Button from '../Button/Button';
 import './Todo.css';
 import TodoItem from '../TodoItem/TodoItem';
 import {TodoItemType} from '../../types/TodoItem.type';
+import {useRef} from 'react';
+import {useEffect} from 'react';
 
 function Todo() {
     const [todoList, setTodoList] = useState<TodoItemType[]>([]);
@@ -34,6 +36,7 @@ function Todo() {
             const newList = [...todoList, newItem];
             setTodoList(newList);
             setInputValue('');
+            inputRef.current.focus();
         }
     }
 
@@ -49,6 +52,7 @@ function Todo() {
 
     function handleDelete(id: number): void {
         setTodoList(todoList.filter(task => task.id !== id));
+        inputRef.current.focus();
     }
 
     function handleUpdateStatus(id: number): void {
@@ -65,7 +69,14 @@ function Todo() {
         });
         setEditMode(true);
         setEditItemIndex(id);
+        inputRef.current.focus();
     }
+
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        inputRef.current.focus();
+    }, []);
 
     return (
         <>
@@ -74,6 +85,7 @@ function Todo() {
                 <div className="todo-field">
                     <input
                         type="text"
+                        ref={inputRef}
                         className="todo-input"
                         onChange={updateInput}
                         placeholder="add a task"

@@ -11,6 +11,10 @@ function Todo() {
 
     const [id, setId] = useState(1);
 
+    const [editMode, setEditMode] = useState(false);
+
+    const [editItemIndex, setEditItemIndex] = useState(0);
+
     function createId() {
         setId(id => id + 1);
     }
@@ -33,6 +37,16 @@ function Todo() {
         }
     }
 
+    function editTodo() {
+        const newList = todoList.map(item => {
+            if (item.id === editItemIndex) item.text = inputValue;
+            return item;
+        });
+        setTodoList(newList);
+        setInputValue('');
+        setEditMode(false);
+    }
+
     function handleDelete(id: number): void {
         setTodoList(todoList.filter(task => task.id !== id));
     }
@@ -46,10 +60,11 @@ function Todo() {
     }
 
     function handleEdit(id: number): void {
-        const editTask = todoList.find(task => task.id === id);
-        setInputValue(editTask.text);
-
-        setTodoList(todoList.filter(task => task.id !== id));
+        todoList.forEach(item => {
+            if (item.id === id) setInputValue(item.text);
+        });
+        setEditMode(true);
+        setEditItemIndex(id);
     }
 
     return (
@@ -64,7 +79,11 @@ function Todo() {
                         placeholder="add a task"
                         value={inputValue}
                     />
-                    <Button onClick={addTodo}>ADD</Button>
+                    {editMode ? (
+                        <Button onClick={editTodo}>EDIT</Button>
+                    ) : (
+                        <Button onClick={addTodo}>ADD</Button>
+                    )}
                 </div>
                 <ul className="todo-list">
                     {todoList.map(item => (

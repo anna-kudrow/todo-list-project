@@ -1,14 +1,9 @@
-// import {useState} from 'react';
 import {ChangeEvent} from 'react';
 import './TodoItem.css';
 import {TodoItemType} from '../../types/TodoItem.type';
-// import {TodoItem} from "../../types/TodoItem.type";
 
 interface TodoItemProps {
     item: TodoItemType;
-    // id: number;
-    // text: string;
-    // isDone: boolean;
     editMode: boolean;
     onDelete: (id: number) => void;
     onEdit: (id: number) => void;
@@ -19,9 +14,6 @@ interface TodoItemProps {
 }
 
 function TodoItem({
-    // text,
-    // isDone,
-    // id,
     item,
     editMode,
     onDelete,
@@ -33,7 +25,7 @@ function TodoItem({
 }: TodoItemProps) {
     return (
         <li className="todo-item">
-            <div>
+            <div className="task-field-box">
                 <input
                     type="checkbox"
                     onChange={() => onStatusChange(item.id)}
@@ -44,6 +36,7 @@ function TodoItem({
                         className="edit-input"
                         type="text"
                         onChange={updateInput}
+                        value={inputValue}
                     />
                 ) : (
                     <span

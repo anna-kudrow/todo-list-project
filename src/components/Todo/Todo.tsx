@@ -84,7 +84,6 @@ function Todo() {
         });
         editMode = true;
         setEditingItemId(id);
-        if (inputRef.current) inputRef.current.focus();
     }
 
     return (

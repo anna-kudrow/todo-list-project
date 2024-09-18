@@ -11,28 +11,40 @@ function Todo() {
 
     const [inputValue, setInputValue] = useState('');
 
+    const [editingInputValue, setEditingInputValue] = useState('');
+
     const [id, setId] = useState(1);
 
     const [editMode, setEditMode] = useState(false);
 
-    const [editItemIndex, setEditItemIndex] = useState(0);
+    const [editingItemId, setEditingItemId] = useState<null | number>(null);
 
-    function createId() {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (inputRef.current) inputRef.current.focus();
+    }, []);
+
+    function incrementId() {
         setId(id => id + 1);
     }
 
     function updateInput(e: ChangeEvent<HTMLInputElement>): void {
         setInputValue(e.target.value);
     }
+    function updateEditingInput(e: ChangeEvent<HTMLInputElement>): void {
+        setEditingInputValue(e.target.value);
+    }
 
     function addTodo(): void {
         if (inputValue && inputValue.trim() !== '') {
-            createId();
             const newItem: TodoItemType = {
                 id: id,
                 text: inputValue,
                 done: false,
+                editMode: false,
             };
+            incrementId();
             const newList = [...todoList, newItem];
             setTodoList(newList);
             setInputValue('');
@@ -42,12 +54,14 @@ function Todo() {
 
     function editTodo() {
         const newList = todoList.map(item => {
-            if (item.id === editItemIndex) item.text = inputValue;
+            if (item.id === editingItemId) item.text = editingInputValue;
             return item;
         });
         setTodoList(newList);
-        setInputValue('');
+        setEditingInputValue('');
         setEditMode(false);
+        setEditingItemId(null);
+        if (inputRef.current) inputRef.current.focus();
     }
 
     function handleDelete(id: number): void {
@@ -65,18 +79,12 @@ function Todo() {
 
     function handleEdit(id: number): void {
         todoList.forEach(item => {
-            if (item.id === id) setInputValue(item.text);
+            if (item.id === id) setEditingInputValue(item.text);
         });
         setEditMode(true);
-        setEditItemIndex(id);
+        setEditingItemId(id);
         if (inputRef.current) inputRef.current.focus();
     }
-
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        if (inputRef.current) inputRef.current.focus();
-    }, []);
 
     return (
         <>
@@ -107,6 +115,10 @@ function Todo() {
                             onDelete={handleDelete}
                             onStatusChange={handleUpdateStatus}
                             onEdit={handleEdit}
+                            editMode={editMode}
+                            updateInput={updateEditingInput}
+                            inputValue={editingInputValue}
+                            editingItemId={editingItemId}
                         />
                     ))}
                 </ul>

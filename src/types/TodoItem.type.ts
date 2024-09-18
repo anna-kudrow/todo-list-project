@@ -1,5 +1,6 @@
 export interface TodoItemType {
-  id: number;
-  text: string;
-  done: boolean;
+    id: number;
+    text: string;
+    done: boolean;
+    editMode: boolean;
 }

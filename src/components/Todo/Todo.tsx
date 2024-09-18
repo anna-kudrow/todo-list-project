@@ -15,11 +15,11 @@ function Todo() {
 
     const [id, setId] = useState(1);
 
-    const [editMode, setEditMode] = useState(false);
-
     const [editingItemId, setEditingItemId] = useState<null | number>(null);
 
     const inputRef = useRef<HTMLInputElement>(null);
+
+    let editMode = editingItemId !== null;
 
     useEffect(() => {
         if (inputRef.current) inputRef.current.focus();
@@ -36,13 +36,12 @@ function Todo() {
         setEditingInputValue(e.target.value);
     }
 
-    function addTodo(): void {
+    function handleClickAdd(): void {
         if (inputValue && inputValue.trim() !== '') {
             const newItem: TodoItemType = {
                 id: id,
                 text: inputValue,
                 done: false,
-                editMode: false,
             };
             incrementId();
             const newList = [...todoList, newItem];
@@ -52,14 +51,16 @@ function Todo() {
         }
     }
 
-    function editTodo() {
+    function handleClickEdit() {
         const newList = todoList.map(item => {
-            if (item.id === editingItemId) item.text = editingInputValue;
+            if (item.id === editingItemId) {
+                return {...item, text: editingInputValue};
+            }
             return item;
         });
         setTodoList(newList);
         setEditingInputValue('');
-        setEditMode(false);
+        editMode = false;
         setEditingItemId(null);
         if (inputRef.current) inputRef.current.focus();
     }
@@ -81,7 +82,7 @@ function Todo() {
         todoList.forEach(item => {
             if (item.id === id) setEditingInputValue(item.text);
         });
-        setEditMode(true);
+        editMode = true;
         setEditingItemId(id);
         if (inputRef.current) inputRef.current.focus();
     }
@@ -100,17 +101,15 @@ function Todo() {
                         value={inputValue}
                     />
                     {editMode ? (
-                        <Button onClick={editTodo}>EDIT</Button>
+                        <Button onClick={handleClickEdit}>EDIT</Button>
                     ) : (
-                        <Button onClick={addTodo}>ADD</Button>
+                        <Button onClick={handleClickAdd}>ADD</Button>
                     )}
                 </div>
                 <ul className="todo-list">
                     {todoList.map(item => (
                         <TodoItem
-                            id={item.id}
-                            text={item.text}
-                            isDone={item.done}
+                            item={item}
                             key={item.id}
                             onDelete={handleDelete}
                             onStatusChange={handleUpdateStatus}

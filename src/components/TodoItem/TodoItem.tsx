@@ -1,25 +1,28 @@
 // import {useState} from 'react';
 import {ChangeEvent} from 'react';
 import './TodoItem.css';
+import {TodoItemType} from '../../types/TodoItem.type';
 // import {TodoItem} from "../../types/TodoItem.type";
 
 interface TodoItemProps {
-    id: number;
-    text: string;
-    isDone: boolean;
+    item: TodoItemType;
+    // id: number;
+    // text: string;
+    // isDone: boolean;
     editMode: boolean;
     onDelete: (id: number) => void;
     onEdit: (id: number) => void;
     onStatusChange: (id: number) => void;
     updateInput: (e: ChangeEvent<HTMLInputElement>) => void;
     inputValue: string;
-    editingItemId: number;
+    editingItemId: number | null;
 }
 
 function TodoItem({
-    text,
-    isDone,
-    id,
+    // text,
+    // isDone,
+    // id,
+    item,
     editMode,
     onDelete,
     onEdit,
@@ -33,18 +36,20 @@ function TodoItem({
             <div>
                 <input
                     type="checkbox"
-                    onChange={() => onStatusChange(id)}
+                    onChange={() => onStatusChange(item.id)}
                     value={inputValue}
                 />
-                {editMode && id === editingItemId ? (
+                {editMode && item.id === editingItemId ? (
                     <input
                         className="edit-input"
                         type="text"
                         onChange={updateInput}
                     />
                 ) : (
-                    <span className={isDone ? 'task-text done' : 'task-text'}>
-                        {text}
+                    <span
+                        className={item.done ? 'task-text done' : 'task-text'}
+                    >
+                        {item.text}
                     </span>
                 )}
             </div>
@@ -52,12 +57,12 @@ function TodoItem({
                 <button
                     className="item-btn edit-btn"
                     type="button"
-                    onClick={() => onEdit(id)}
+                    onClick={() => onEdit(item.id)}
                 ></button>
                 <button
                     className="item-btn delete-btn"
                     type="button"
-                    onClick={() => onDelete(id)}
+                    onClick={() => onDelete(item.id)}
                 ></button>
             </div>
         </li>

@@ -37,6 +37,7 @@ function TodoItem({
                         type="text"
                         onChange={updateInput}
                         value={inputValue}
+                        autoFocus
                     />
                 ) : (
                     <span

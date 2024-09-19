@@ -32,9 +32,6 @@ function Todo() {
     function updateInput(e: ChangeEvent<HTMLInputElement>): void {
         setInputValue(e.target.value);
     }
-    function updateEditingInput(e: ChangeEvent<HTMLInputElement>): void {
-        setEditingInputValue(e.target.value);
-    }
 
     function handleClickAdd(): void {
         if (inputValue && inputValue.trim() !== '') {
@@ -70,20 +67,22 @@ function Todo() {
         if (inputRef.current) inputRef.current.focus();
     }
 
-    function handleUpdateStatus(id: number): void {
-        const newList = todoList.map(item => {
-            if (item.id === id) item.done = !item.done;
-            return item;
-        });
-        setTodoList(newList);
-    }
-
     function handleEdit(id: number): void {
         todoList.forEach(item => {
             if (item.id === id) setEditingInputValue(item.text);
         });
         editMode = true;
         setEditingItemId(id);
+    }
+
+    function handleOnChangeItem(newItem: TodoItemType) {
+        const newList = todoList.map(item => {
+            if (item.id === newItem.id) {
+                return newItem;
+            }
+            return item;
+        });
+        setTodoList(newList);
     }
 
     return (
@@ -111,12 +110,13 @@ function Todo() {
                             item={item}
                             key={item.id}
                             onDelete={handleDelete}
-                            onStatusChange={handleUpdateStatus}
                             onEdit={handleEdit}
+                            onChange={handleOnChangeItem}
                             editMode={editMode}
-                            updateInput={updateEditingInput}
+                            // updateInput={updateEditingInput}
                             inputValue={editingInputValue}
                             editingItemId={editingItemId}
+                            setEditingInputValue={setEditingInputValue}
                         />
                     ))}
                 </ul>

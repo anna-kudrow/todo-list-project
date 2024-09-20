@@ -9,10 +9,9 @@ interface TodoItemProps {
     onDelete: (id: number) => void;
     onEdit: (id: number) => void;
     onItemChange: (item: TodoItemType) => void;
-    // updateInput: (e: ChangeEvent<HTMLInputElement>) => void;
     inputValue: string;
     editingItemId: number | null;
-    setEditingItemId: SetStateAction<number | null>;
+    setEditingItemId: React.Dispatch<React.SetStateAction<number | null>>;
     setEditingInputValue: (text: string) => void;
 }
 
@@ -20,7 +19,6 @@ function TodoItem({
     item,
     editMode,
     onDelete,
-    onEdit,
     setEditingItemId,
     onItemChange,
     inputValue,
@@ -39,24 +37,7 @@ function TodoItem({
         editMode = true;
         setEditingItemId(item.id);
         setEditingInputValue(item.text);
-        // todoList.forEach(item => {
-        //     if (item.id === id) setEditingInputValue(item.text);
-        // });
     }
-
-    // function handleClickSaveEdit() {
-    //     const newList = todoList.map(item => {
-    //         if (item.id === editingItemId) {
-    //             return {...item, text: editingInputValue};
-    //         }
-    //         return item;
-    //     });
-    //     setTodoList(newList);
-    //     setEditingInputValue('');
-    //     editMode = false;
-    //     setEditingItemId(null);
-    //     if (inputRef.current) inputRef.current.focus();
-    // }
 
     return (
         <li className="todo-item">

@@ -49,18 +49,6 @@ function Todo() {
     }
 
     function handleClickSaveEdit() {
-        // const newList = todoList.map(item => {
-        //     if (item.id === editingItemId) {
-        //         return {...item, text: editingInputValue};
-        //     }
-        //     return item;
-        // });
-        // setTodoList(newList);
-        // setEditingInputValue('');
-        // editMode = false;
-        // setEditingItemId(null);
-        // if (inputRef.current) inputRef.current.focus();
-
         todoList.forEach(item => {
             if (item.id === editingItemId) {
                 const newItem = {...item, text: editingInputValue};
@@ -123,7 +111,6 @@ function Todo() {
                             onEdit={handleEdit}
                             onItemChange={handleOnChangeItem}
                             editMode={editMode}
-                            // updateInput={updateEditingInput}
                             inputValue={editingInputValue}
                             editingItemId={editingItemId}
                             setEditingInputValue={setEditingInputValue}

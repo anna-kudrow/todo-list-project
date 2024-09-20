@@ -48,18 +48,28 @@ function Todo() {
         }
     }
 
-    function handleClickEdit() {
-        const newList = todoList.map(item => {
+    function handleClickSaveEdit() {
+        // const newList = todoList.map(item => {
+        //     if (item.id === editingItemId) {
+        //         return {...item, text: editingInputValue};
+        //     }
+        //     return item;
+        // });
+        // setTodoList(newList);
+        // setEditingInputValue('');
+        // editMode = false;
+        // setEditingItemId(null);
+        // if (inputRef.current) inputRef.current.focus();
+
+        todoList.forEach(item => {
             if (item.id === editingItemId) {
-                return {...item, text: editingInputValue};
+                const newItem = {...item, text: editingInputValue};
+                handleOnChangeItem(newItem);
+                setEditingInputValue('');
+                editMode = false;
+                setEditingItemId(null);
             }
-            return item;
         });
-        setTodoList(newList);
-        setEditingInputValue('');
-        editMode = false;
-        setEditingItemId(null);
-        if (inputRef.current) inputRef.current.focus();
     }
 
     function handleDelete(id: number): void {
@@ -99,7 +109,7 @@ function Todo() {
                         value={inputValue}
                     />
                     {editMode ? (
-                        <Button onClick={handleClickEdit}>EDIT</Button>
+                        <Button onClick={handleClickSaveEdit}>EDIT</Button>
                     ) : (
                         <Button onClick={handleClickAdd}>ADD</Button>
                     )}
@@ -111,12 +121,13 @@ function Todo() {
                             key={item.id}
                             onDelete={handleDelete}
                             onEdit={handleEdit}
-                            onChange={handleOnChangeItem}
+                            onItemChange={handleOnChangeItem}
                             editMode={editMode}
                             // updateInput={updateEditingInput}
                             inputValue={editingInputValue}
                             editingItemId={editingItemId}
                             setEditingInputValue={setEditingInputValue}
+                            setEditingItemId={setEditingItemId}
                         />
                     ))}
                 </ul>

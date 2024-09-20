@@ -8,10 +8,11 @@ interface TodoItemProps {
     editMode: boolean;
     onDelete: (id: number) => void;
     onEdit: (id: number) => void;
-    onChange: (item: TodoItemType) => void;
+    onItemChange: (item: TodoItemType) => void;
     // updateInput: (e: ChangeEvent<HTMLInputElement>) => void;
     inputValue: string;
     editingItemId: number | null;
+    setEditingItemId: SetStateAction<number | null>;
     setEditingInputValue: (text: string) => void;
 }
 
@@ -20,19 +21,41 @@ function TodoItem({
     editMode,
     onDelete,
     onEdit,
-    onChange,
+    setEditingItemId,
+    onItemChange,
     inputValue,
     editingItemId,
     setEditingInputValue,
 }: TodoItemProps) {
     function handleUpdateStatus(item: TodoItemType): void {
-        item.done = !item.done;
-        onChange(item);
+        onItemChange({...item, done: !item.done});
     }
 
-    // function handleUpdateText(item: TodoItemType): void {
-    //     setEditingInputValue(e.target.value);
-    //     onChange(item);
+    function handleUpdateText(e: ChangeEvent<HTMLInputElement>): void {
+        setEditingInputValue(e.target.value);
+    }
+
+    function handleEdit(item: TodoItemType): void {
+        editMode = true;
+        setEditingItemId(item.id);
+        setEditingInputValue(item.text);
+        // todoList.forEach(item => {
+        //     if (item.id === id) setEditingInputValue(item.text);
+        // });
+    }
+
+    // function handleClickSaveEdit() {
+    //     const newList = todoList.map(item => {
+    //         if (item.id === editingItemId) {
+    //             return {...item, text: editingInputValue};
+    //         }
+    //         return item;
+    //     });
+    //     setTodoList(newList);
+    //     setEditingInputValue('');
+    //     editMode = false;
+    //     setEditingItemId(null);
+    //     if (inputRef.current) inputRef.current.focus();
     // }
 
     return (
@@ -47,7 +70,7 @@ function TodoItem({
                     <input
                         className="edit-input"
                         type="text"
-                        onChange={handleUpdateText(item)}
+                        onChange={handleUpdateText}
                         value={inputValue}
                         autoFocus
                     />
@@ -63,7 +86,7 @@ function TodoItem({
                 <button
                     className="item-btn edit-btn"
                     type="button"
-                    onClick={() => onEdit(item.id)}
+                    onClick={() => handleEdit(item)}
                 ></button>
                 <button
                     className="item-btn delete-btn"

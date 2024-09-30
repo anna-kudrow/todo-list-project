@@ -1,42 +1,33 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-import {ChangeEvent} from 'react';
+import {ChangeEvent, useState} from 'react';
 import './TodoItem.css';
 import {TodoItemType} from '../../types/TodoItem.type';
 
 interface TodoItemProps {
     item: TodoItemType;
-    editMode: boolean;
     onDelete: (id: number) => void;
-    onEdit: (id: number) => void;
     onItemChange: (item: TodoItemType) => void;
-    inputValue: string;
-    editingItemId: number | null;
-    setEditingItemId: React.Dispatch<React.SetStateAction<number | null>>;
-    setEditingInputValue: (text: string) => void;
 }
 
-function TodoItem({
-    item,
-    editMode,
-    onDelete,
-    setEditingItemId,
-    onItemChange,
-    inputValue,
-    editingItemId,
-    setEditingInputValue,
-}: TodoItemProps) {
+function TodoItem({item, onDelete, onItemChange}: TodoItemProps) {
+    const [editMode, setEditMode] = useState(false);
+    const [inputValue, setInputValue] = useState(item.text);
+
     function handleUpdateStatus(item: TodoItemType): void {
         onItemChange({...item, done: !item.done});
     }
 
     function handleUpdateText(e: ChangeEvent<HTMLInputElement>): void {
-        setEditingInputValue(e.target.value);
+        setInputValue(e.target.value);
     }
 
     function handleEdit(item: TodoItemType): void {
-        editMode = true;
-        setEditingItemId(item.id);
-        setEditingInputValue(item.text);
+        setEditMode(true);
+        setInputValue(item.text);
+    }
+
+    function handleBlur() {
+        setEditMode(false);
+        onItemChange({...item, text: inputValue});
     }
 
     return (
@@ -45,13 +36,13 @@ function TodoItem({
                 <input
                     type="checkbox"
                     onChange={() => handleUpdateStatus(item)}
-                    value={inputValue}
                 />
-                {editMode && item.id === editingItemId ? (
+                {editMode ? (
                     <input
                         className="edit-input"
                         type="text"
                         onChange={handleUpdateText}
+                        onBlur={handleBlur}
                         value={inputValue}
                         autoFocus
                     />

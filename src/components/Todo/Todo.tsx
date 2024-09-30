@@ -3,27 +3,11 @@ import Button from '../Button/Button';
 import './Todo.css';
 import TodoItem from '../TodoItem/TodoItem';
 import {TodoItemType} from '../../types/TodoItem.type';
-import {useRef} from 'react';
-import {useEffect} from 'react';
 
 function Todo() {
     const [todoList, setTodoList] = useState<TodoItemType[]>([]);
-
     const [inputValue, setInputValue] = useState('');
-
-    const [editingInputValue, setEditingInputValue] = useState('');
-
     const [id, setId] = useState(1);
-
-    const [editingItemId, setEditingItemId] = useState<null | number>(null);
-
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    let editMode = editingItemId !== null;
-
-    useEffect(() => {
-        if (inputRef.current) inputRef.current.focus();
-    }, []);
 
     function incrementId() {
         setId(id => id + 1);
@@ -44,33 +28,10 @@ function Todo() {
             const newList = [...todoList, newItem];
             setTodoList(newList);
             setInputValue('');
-            if (inputRef.current) inputRef.current.focus();
         }
     }
-
-    function handleClickSaveEdit() {
-        todoList.forEach(item => {
-            if (item.id === editingItemId) {
-                const newItem = {...item, text: editingInputValue};
-                handleOnChangeItem(newItem);
-                setEditingInputValue('');
-                editMode = false;
-                setEditingItemId(null);
-            }
-        });
-    }
-
     function handleDelete(id: number): void {
         setTodoList(todoList.filter(task => task.id !== id));
-        if (inputRef.current) inputRef.current.focus();
-    }
-
-    function handleEdit(id: number): void {
-        todoList.forEach(item => {
-            if (item.id === id) setEditingInputValue(item.text);
-        });
-        editMode = true;
-        setEditingItemId(id);
     }
 
     function handleOnChangeItem(newItem: TodoItemType) {
@@ -90,17 +51,13 @@ function Todo() {
                 <div className="todo-field">
                     <input
                         type="text"
-                        ref={inputRef}
+                        autoFocus
                         className="todo-input"
                         onChange={updateInput}
                         placeholder="add a task"
                         value={inputValue}
                     />
-                    {editMode ? (
-                        <Button onClick={handleClickSaveEdit}>EDIT</Button>
-                    ) : (
-                        <Button onClick={handleClickAdd}>ADD</Button>
-                    )}
+                    <Button onClick={handleClickAdd}>ADD</Button>
                 </div>
                 <ul className="todo-list">
                     {todoList.map(item => (
@@ -108,13 +65,7 @@ function Todo() {
                             item={item}
                             key={item.id}
                             onDelete={handleDelete}
-                            onEdit={handleEdit}
                             onItemChange={handleOnChangeItem}
-                            editMode={editMode}
-                            inputValue={editingInputValue}
-                            editingItemId={editingItemId}
-                            setEditingInputValue={setEditingInputValue}
-                            setEditingItemId={setEditingItemId}
                         />
                     ))}
                 </ul>
